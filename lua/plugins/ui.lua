@@ -280,7 +280,9 @@ return {
           local current_lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, false)
           if vim.bo[buffer].buftype == "" and vim.api.nvim_buf_get_name(buffer) == ""
             and #current_lines == 1 and current_lines[1] == "" then
-            require("snacks").dashboard.open()
+            -- Reuse the empty buffer and window instead of a floating dashboard, so `:terminal`
+            -- doesn't leave a [No Name] buffer behind and the explorer sidebar doesn't sit under it.
+            require("snacks").dashboard.open({ buf = buffer, win = vim.api.nvim_get_current_win() })
           end
         end)
       end
